@@ -27,6 +27,7 @@ import static android.content.Context.VIBRATOR_SERVICE;
 
 public class DuringGame extends View {
     Context Context;
+
     ArrayList<Cord> cordinates = new ArrayList<Cord>();
     ArrayList<Cord> randomForMineOrg = new ArrayList<Cord>();
     ArrayList<Cord> safeTiles = new ArrayList<Cord>();
@@ -34,20 +35,16 @@ public class DuringGame extends View {
     ArrayList<Cord> forNumber = new ArrayList<Cord>();
     ArrayList<tileNum> forTileNumber = new ArrayList<tileNum>();
 
-    int n, mineNum;
-    float xTouched;
-    float yTouched;
-
+    float xTouched, yTouched;
     Paint textPaint, numPaint, objPaint, borderPaint;
-    int score = 0;
     Bitmap tileOrg, safeTileOrg, mineOrg, tile, safeTile, mine;
     int dWidth, dHeight;
     MediaPlayer SAFE, MINE, WIN, END;
     SharedPreferences sharedPreferences;
-    int gameType;
     float x, y, w, s;
     Boolean audioState;
-    int i;
+    int i, n, mineNum, gameType;
+    int score = 0;
     int numOfCord;
     int q,p =1;
     Cord o = new Cord(0,0);
@@ -73,7 +70,6 @@ public class DuringGame extends View {
         SAFE = MediaPlayer.create(context, R.raw.safe);
         MINE = MediaPlayer.create(context, R.raw.mine);
         WIN = MediaPlayer.create(context, R.raw.win);
-        END = MediaPlayer.create(context, R.raw.game_end);
 
         objPaint.setAntiAlias(true);
         objPaint.setFilterBitmap(true);
@@ -184,7 +180,6 @@ public class DuringGame extends View {
                             Vibrator w = (Vibrator) Context.getSystemService(VIBRATOR_SERVICE);
                             if (audioState) {
                                 MINE.start();
-                                END.start();
                             }
 
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
