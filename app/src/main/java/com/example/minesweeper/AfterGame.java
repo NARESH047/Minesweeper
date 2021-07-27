@@ -16,7 +16,7 @@ public class AfterGame extends AppCompatActivity {
     TextView highestScore;
     SharedPreferences sharedPreferences;
     Boolean audioState;
-    MediaPlayer END;lk
+    MediaPlayer END;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
