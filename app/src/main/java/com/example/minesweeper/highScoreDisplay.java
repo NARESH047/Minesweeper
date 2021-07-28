@@ -15,23 +15,18 @@ import androidx.appcompat.app.AppCompatActivity;
 public class highScoreDisplay extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     TextView highestEasyScore, highestMediumScore, highestHardScore;
-    boolean audioState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.high_score);
-
-        sharedPreferences = getSharedPreferences("preferences",0);
-
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        sharedPreferences = getSharedPreferences("preferences",0);
 
         highestEasyScore = findViewById(R.id.highest_score_easy);
         highestMediumScore = findViewById(R.id.highest_score_medium);
         highestHardScore = findViewById(R.id.highest_score_hard);
 
-
-        sharedPreferences = getSharedPreferences("preferences",0);
         int easyhighest = sharedPreferences.getInt("easyhighest", 0);
         int mediumhighest = sharedPreferences.getInt("mediumhighest", 0);
         int hardhighest = sharedPreferences.getInt("hardhighest", 0);
@@ -47,8 +42,6 @@ public class highScoreDisplay extends AppCompatActivity {
         startActivity(newGame);
         finish();
     }
-
-
 
     public void exit(View view) {
         finishAffinity();

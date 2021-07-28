@@ -39,11 +39,11 @@ public class DuringGame extends View {
     Paint textPaint, numPaint, objPaint, borderPaint, tileRemainingPaint, gameTypePaint;
     Bitmap tileOrg, safeTileOrg, mineOrg, tile, safeTile, mine;
     int dWidth, dHeight;
-    MediaPlayer SAFE, MINE, WIN, END;
+    MediaPlayer SAFE, MINE, WIN;
     SharedPreferences sharedPreferences;
     String game;
     float x, y, w, s;
-    Boolean audioState, gameIn;
+    Boolean audioState;
     int i, n, mineNum, gameType, yCordNumRemainingTile;
     int score = 0;
     int numOfCord, numOfRemainingTiles;
@@ -60,7 +60,6 @@ public class DuringGame extends View {
         numPaint = new Paint();
         objPaint = new Paint();
         borderPaint = new Paint();
-        gameIn=true;
 
         tileOrg = BitmapFactory.decodeResource(getResources(), R.drawable.tile);
         safeTileOrg = BitmapFactory.decodeResource(getResources(), R.drawable.safe_tile);
