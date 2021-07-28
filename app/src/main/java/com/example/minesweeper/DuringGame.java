@@ -91,7 +91,7 @@ public class DuringGame extends View {
         gameTypePaint.setStrokeWidth(4);
 
         tileRemainingPaint.setColor(Color.parseColor("#0000FF"));
-        tileRemainingPaint.setTextSize(120f);
+        tileRemainingPaint.setTextSize(136f);
         tileRemainingPaint.setTextAlign(Paint.Align.CENTER);
         tileRemainingPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         tileRemainingPaint.setStyle(Paint.Style.STROKE);
@@ -134,7 +134,7 @@ public class DuringGame extends View {
             game="2020:)";
         }
 
-        yCordNumRemainingTile = (dHeight + ((3*dHeight/8)+(8*tile.getHeight())))/2 ;
+        yCordNumRemainingTile = (dHeight + ((3*dHeight/8)+(8*tile.getHeight())) + 40)/2 ;
 
         numOfCord = cordinates.size();
         while (randomForMineOrg.size()<mineNum){

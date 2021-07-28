@@ -21,7 +21,7 @@ public class AfterGame extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     Boolean audioState;
     MediaPlayer END;
-    int gameType, backPress;
+    int gameType, backPressNum;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,8 +57,8 @@ public class AfterGame extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Toast backPressToast = Toast.makeText(getApplicationContext(), "Press back button again to exit", Toast.LENGTH_SHORT);
-        backPress++;
-        if (backPress==1) {
+        backPressNum++;
+        if (backPressNum==1) {
             backPressToast.show();
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -69,9 +69,9 @@ public class AfterGame extends AppCompatActivity {
                     startActivity(intent);
                 }
             }, 1000);
-        } else if(backPress==2){
+        } else if(backPressNum==2){
             backPressToast.cancel();
-            backPress = 0;
+            backPressNum = 0;
             System.exit(0);
         }
     }
