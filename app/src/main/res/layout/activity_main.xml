@@ -132,7 +132,7 @@ android:background="@mipmap/app_background_stars">
 
 <androidx.cardview.widget.CardView
     android:layout_width="match_parent"
-    android:layout_height="264dp"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
     app:cardElevation="10dp"
     app:cardBackgroundColor="#D9ffffff"
@@ -148,16 +148,16 @@ android:background="@mipmap/app_background_stars">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Game play"
-            android:textSize="24dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
+            android:textSize="18dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
             android:textStyle="bold"
             android:layout_gravity="center"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" + On and off sound by pressing on the audio icon. \n + Enter the game by choosing difficulty level. \n + Select a tile by click. \n + Number on top of tile indicate number of surrounding mine. \n + Your score is diplayed on top of screen. \n + Press exit icon to exit. \n + Press restart icon to restart the game."
+            android:text=" + On and off sound by pressing on the audio icon. \n + Enter the game by choosing difficulty level. \n + Select a tile by click. \n + Number at bottom of screen indicate number of remaining non mine tile. \n +Number on top of tile indicate number of surrounding mine. \n + Your score is diplayed on top of screen. \n + Press exit icon to exit. \n + Press restart icon to restart the game."
             android:textSize="16dp"
             />
 

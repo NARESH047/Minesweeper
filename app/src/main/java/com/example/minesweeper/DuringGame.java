@@ -36,17 +36,17 @@ public class DuringGame extends View {
     ArrayList<tileNum> forTileNumber = new ArrayList<tileNum>();
 
     float xTouched, yTouched;
-    Paint textPaint, numPaint, objPaint, borderPaint;
+    Paint textPaint, numPaint, objPaint, borderPaint, tileRemainingPaint, gameTypePaint;
     Bitmap tileOrg, safeTileOrg, mineOrg, tile, safeTile, mine;
     int dWidth, dHeight;
     MediaPlayer SAFE, MINE, WIN, END;
     SharedPreferences sharedPreferences;
     String game;
     float x, y, w, s;
-    Boolean audioState;
-    int i, n, mineNum, gameType;
+    Boolean audioState, gameIn;
+    int i, n, mineNum, gameType, yCordNumRemainingTile;
     int score = 0;
-    int numOfCord;
+    int numOfCord, numOfRemainingTiles;
     int q,p =1;
     Cord o = new Cord(0,0);
 
@@ -55,9 +55,12 @@ public class DuringGame extends View {
         super(context);
         Context = context;
         textPaint = new Paint();
+        gameTypePaint = new Paint();
+        tileRemainingPaint = new Paint();
         numPaint = new Paint();
         objPaint = new Paint();
         borderPaint = new Paint();
+        gameIn=true;
 
         tileOrg = BitmapFactory.decodeResource(getResources(), R.drawable.tile);
         safeTileOrg = BitmapFactory.decodeResource(getResources(), R.drawable.safe_tile);
@@ -80,6 +83,21 @@ public class DuringGame extends View {
         textPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         textPaint.setStyle(Paint.Style.STROKE);
         textPaint.setStrokeWidth(4);
+
+        gameTypePaint.setColor(Color.parseColor("#ffc0cb"));
+        gameTypePaint.setTextSize(120f);
+        gameTypePaint.setTextAlign(Paint.Align.CENTER);
+        gameTypePaint.setFlags(Paint.ANTI_ALIAS_FLAG);
+        gameTypePaint.setStyle(Paint.Style.STROKE);
+        gameTypePaint.setStrokeWidth(4);
+
+        tileRemainingPaint.setColor(Color.parseColor("#0000FF"));
+        tileRemainingPaint.setTextSize(120f);
+        tileRemainingPaint.setTextAlign(Paint.Align.CENTER);
+        tileRemainingPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
+        tileRemainingPaint.setStyle(Paint.Style.STROKE);
+        tileRemainingPaint.setStrokeWidth(4);
+
         numPaint.setColor(Color.WHITE);
         numPaint.setTextAlign(Paint.Align.CENTER);
         numPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
@@ -117,6 +135,8 @@ public class DuringGame extends View {
             game="2020:)";
         }
 
+        yCordNumRemainingTile = (dHeight + ((3*dHeight/8)+(8*tile.getHeight())))/2 ;
+
         numOfCord = cordinates.size();
         while (randomForMineOrg.size()<mineNum){
             i = random();
@@ -125,7 +145,7 @@ public class DuringGame extends View {
             }
         }
 
-        score = safeTiles.size();
+        numOfRemainingTiles = (numOfCord-mineNum-score);
 
     }
 
@@ -151,12 +171,14 @@ public class DuringGame extends View {
             canvas.drawText(String.valueOf(num.getTileNumDisplayed()), num.getTileNumxCord()-(tile.getWidth()/2), num.getTileNumyCord()-(tile.getWidth()/2), numPaint);
         }
 
-        canvas.drawText("Game: "+game, dWidth/2, dHeight/8, textPaint);
-        canvas.drawText("Score: "+safeTiles.size(), dWidth/2, dHeight/4, textPaint);
+        canvas.drawText("Game: "+game, dWidth/2, dHeight/8, gameTypePaint);
+        canvas.drawText("Score: "+score, dWidth/2, dHeight/4, textPaint);
+        canvas.drawText(String.valueOf((numOfCord-mineNum-score)), dWidth/2, yCordNumRemainingTile, tileRemainingPaint);
+
         invalidate();
 
-        if(safeTiles.size()>3) {
-            textPaint.setColor(Color.GREEN);
+        if(score>3) {
+            textPaint.setColor(Color.parseColor("#00FF00"));
         }
 
     }
@@ -181,7 +203,16 @@ public class DuringGame extends View {
                 for(Cord cordi:randomForMineOrg){
                     {
                         if(cordEqual(cordi, o)){
-                            randomForMine.add(o);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putInt("currentScore", score);
+                            editor.commit();
+                            highestScore();
+                            for (Cord cordS:cordinates){
+                                if((!containedIn(cordS, randomForMineOrg)) && (!containedIn(cordS, safeTiles))){
+                                    safeTiles.add(cordS);}}
+                            for (Cord cordM:randomForMineOrg){
+                                randomForMine.add(cordM);
+                            }
                             o = new Cord(0,0);
                             Vibrator w = (Vibrator) Context.getSystemService(VIBRATOR_SERVICE);
                             if (audioState) {
@@ -195,22 +226,20 @@ public class DuringGame extends View {
                             } else {
                                 w.vibrate(1000);
                             }
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putInt("currentScore", safeTiles.size());
-                            editor.commit();
-                            highestScore();
 
                         }
                     }
                 }
                 for (Cord cordi:cordinates){
                     if(cordEqual(cordi, o) && (!containedIn(o, randomForMineOrg)) && (!containedIn(o, safeTiles))){
+                        score++;
                         safeTiles.add(o);
                         if(safeTiles.size() == 64-mineNum){
+                            setOnTouchListener(null);
                             if (audioState) {
                                 WIN.start();}
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putInt("currentScore", safeTiles.size());
+                                editor.putInt("currentScore", score);
                                 editor.commit();
                                 highestScore();
                                 Intent intent = new Intent(Context, AfterGame.class);
@@ -256,8 +285,8 @@ public class DuringGame extends View {
     private void highestScore() {
         if(gameType==0){
             int easyhighest = sharedPreferences.getInt("easyhighest", 0);
-            if(safeTiles.size() > easyhighest){
-                easyhighest = safeTiles.size();
+            if(score > easyhighest){
+                easyhighest = score;
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putInt("easyhighest", easyhighest);
                 editor.commit();
@@ -267,8 +296,8 @@ public class DuringGame extends View {
 
         else if(gameType==1){
             int mediumhighest = sharedPreferences.getInt("mediumhighest", 0);
-            if(safeTiles.size() > mediumhighest){
-                mediumhighest = safeTiles.size();
+            if(score > mediumhighest){
+                mediumhighest = score;
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putInt("mediumhighest", mediumhighest);
                 editor.commit();
@@ -277,8 +306,8 @@ public class DuringGame extends View {
         }
         else {
             int hardhighest = sharedPreferences.getInt("hardhighest", 0);
-            if(safeTiles.size() > hardhighest){
-                hardhighest = safeTiles.size();
+            if(score > hardhighest){
+                hardhighest = score;
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putInt("hardhighest", hardhighest);
                 editor.commit();
@@ -305,6 +334,5 @@ public class DuringGame extends View {
         }
         return false;
     }
-
 }
 

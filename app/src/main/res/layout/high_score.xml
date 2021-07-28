@@ -65,8 +65,8 @@
         <ImageButton
             android:id="@+id/exit"
             android:layout_margin="16dp"
-            android:layout_width="88dp"
-            android:layout_height="88dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:background="@drawable/exit"
             android:layout_gravity="center"
             android:onClick="exit" />
@@ -76,15 +76,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Highest Score"
-            android:layout_marginTop="8dp"
-            android:textColor="#669900"
+            android:textColor="#ffbf00"
             android:textSize="40sp"
             android:layout_gravity="center"/>
     <ImageView
         android:layout_width="160dp"
         android:layout_height="0dp"
         android:layout_weight="2"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_gravity="center"
         android:src="@drawable/pixelated_trophy"/>
 
@@ -115,7 +114,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:layout_marginTop="32dp">
+        android:layout_marginTop="16dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
