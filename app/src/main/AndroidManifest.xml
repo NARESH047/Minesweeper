@@ -22,6 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".highScoreDisplay" />
+        <activity android:name=".highScoreDisplay"
+            android:exported="true"
+            android:theme="@style/AppTheme"/>
     </application>
 </manifest>
