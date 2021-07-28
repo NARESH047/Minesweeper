@@ -1,5 +1,6 @@
 package com.example.minesweeper;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -89,6 +90,10 @@ public class MainActivity extends AppCompatActivity {
         DuringGame duringGame = new DuringGame(this);
         setContentView(duringGame);
     }
+    public void highestScore(View view) {
+        Intent highScore = new Intent(MainActivity.this, highScoreDisplay.class);
+        startActivity(highScore);
+    }
 
     @Override
     protected void onPause() {
@@ -108,7 +113,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void exit(View view) {
-        finish();
+        System.exit(0);
     }
+
 
 }

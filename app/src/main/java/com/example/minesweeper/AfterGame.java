@@ -17,6 +17,7 @@ public class AfterGame extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     Boolean audioState;
     MediaPlayer END;
+    int gameType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,6 +25,7 @@ public class AfterGame extends AppCompatActivity {
         setContentView(R.layout.after_game);
         sharedPreferences = this.getSharedPreferences("preferences", 0);
         audioState = sharedPreferences.getBoolean("audioState", true);
+        gameType = sharedPreferences.getInt("gameType", 0);
         END = MediaPlayer.create(this, R.raw.game_end);
         if (audioState) {
             END.start();
@@ -33,8 +35,18 @@ public class AfterGame extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("preferences", 0);
         int score = sharedPreferences.getInt("currentScore", 0);
         currentScore.setText(String.valueOf(score));
-        int highest = sharedPreferences.getInt("highest", 0);
-        highestScore.setText(String.valueOf(highest));
+        if(gameType==0){
+            int highest = sharedPreferences.getInt("easyhighest", 0);
+            highestScore.setText(String.valueOf(highest));
+        }
+        else if(gameType==1){
+            int highest = sharedPreferences.getInt("mediumhighest", 0);
+            highestScore.setText(String.valueOf(highest));
+        }
+        else{
+            int highest = sharedPreferences.getInt("hardhighest", 0);
+            highestScore.setText(String.valueOf(highest));
+        }
    }
 
     public void restart(View view) {

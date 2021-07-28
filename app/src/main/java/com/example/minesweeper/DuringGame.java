@@ -41,6 +41,7 @@ public class DuringGame extends View {
     int dWidth, dHeight;
     MediaPlayer SAFE, MINE, WIN, END;
     SharedPreferences sharedPreferences;
+    String game;
     float x, y, w, s;
     Boolean audioState;
     int i, n, mineNum, gameType;
@@ -78,11 +79,12 @@ public class DuringGame extends View {
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         textPaint.setStyle(Paint.Style.STROKE);
+        textPaint.setStrokeWidth(4);
         numPaint.setColor(Color.WHITE);
         numPaint.setTextAlign(Paint.Align.CENTER);
         numPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         numPaint.setStyle(Paint.Style.FILL);
-        borderPaint.setStrokeWidth(10);
+        borderPaint.setStrokeWidth(16);
         borderPaint.setColor(Color.parseColor("#FFD770"));
         borderPaint.setStyle(Paint.Style.STROKE);
 
@@ -98,7 +100,7 @@ public class DuringGame extends View {
 
         numPaint.setTextSize(tile.getHeight()/2);
 
-        for(y= dHeight/4; y< dHeight/4 + 8*tile.getHeight() ; y = y + tile.getHeight()) {
+        for(y= 3*dHeight/8; y< 3*dHeight/8 + 8*tile.getHeight() ; y = y + tile.getHeight()) {
             for(x=8; x<8+ 8*tile.getWidth(); x=x+tile.getWidth()) {
                 cordinates.add(new Cord(x, y));
             }
@@ -106,10 +108,13 @@ public class DuringGame extends View {
 
         if(gameType==0){
             mineNum=8;
+            game = "Easy";
         }else if(gameType==1){
             mineNum=16;
+            game = "Medium";
         }else {
             mineNum=20;
+            game="2020:)";
         }
 
         numOfCord = cordinates.size();
@@ -146,7 +151,8 @@ public class DuringGame extends View {
             canvas.drawText(String.valueOf(num.getTileNumDisplayed()), num.getTileNumxCord()-(tile.getWidth()/2), num.getTileNumyCord()-(tile.getWidth()/2), numPaint);
         }
 
-        canvas.drawText("Score: "+safeTiles.size(), dWidth/2, dHeight/8, textPaint);
+        canvas.drawText("Game: "+game, dWidth/2, dHeight/8, textPaint);
+        canvas.drawText("Score: "+safeTiles.size(), dWidth/2, dHeight/4, textPaint);
         invalidate();
 
         if(safeTiles.size()>3) {
@@ -165,12 +171,12 @@ public class DuringGame extends View {
     public boolean onTouchEvent(MotionEvent event) {
         xTouched = event.getX();
         yTouched = event.getY();
-        if (yTouched >= dHeight / 4 && yTouched < dHeight/4 + 8*tile.getWidth()) {
+        if (yTouched >= 3*dHeight/8 && yTouched < (3*dHeight/8) + 8*tile.getWidth()) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 p = (int) (((xTouched - 8) / tile.getWidth()) + 1);
-                q = (int) (((yTouched - (dHeight / 4)) / tile.getHeight()) + 1);
+                q = (int) (((yTouched - (3*dHeight/8)) / tile.getHeight()) + 1);
                 w  =  ((8+(p-1)*tile.getWidth()));
-                s = dHeight/4 + (q-1)*tile.getHeight();
+                s = 3*dHeight/8 + (q-1)*tile.getHeight();
                 o = new Cord(w, s);
                 for(Cord cordi:randomForMineOrg){
                     {
@@ -181,7 +187,9 @@ public class DuringGame extends View {
                             if (audioState) {
                                 MINE.start();
                             }
-
+                            Intent intent = new Intent(Context, AfterGame.class);
+                            Context.startActivity(intent);
+                            ((Activity) Context).finish();
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 w.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE));
                             } else {
@@ -190,15 +198,8 @@ public class DuringGame extends View {
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putInt("currentScore", safeTiles.size());
                             editor.commit();
-                            int highest = sharedPreferences.getInt("highest", 0);
-                            if(safeTiles.size() > highest){
-                                highest = safeTiles.size();
-                                editor.putInt("highest", highest);
-                                editor.commit();
-                            }
-                            Intent intent = new Intent(Context, AfterGame.class);
-                            Context.startActivity(intent);
-                            ((Activity) Context).finish();
+                            highestScore();
+
                         }
                     }
                 }
@@ -211,10 +212,7 @@ public class DuringGame extends View {
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putInt("currentScore", safeTiles.size());
                                 editor.commit();
-                                int highest = sharedPreferences.getInt("highest", 0);
-                                    highest = safeTiles.size();
-                                    editor.putInt("highest", highest);
-                                    editor.commit();
+                                highestScore();
                                 Intent intent = new Intent(Context, AfterGame.class);
                                 Context.startActivity(intent);
                                 ((Activity) Context).finish();
@@ -240,7 +238,7 @@ public class DuringGame extends View {
                                 }
                             }
                         }
-                        forTileNumber.add(new tileNum(w+(tile.getWidth()),s+(tile.getHeight()),n));
+                        forTileNumber.add(new tileNum(w+(tile.getWidth()),s+(tile.getHeight()), n));
                         n=0;
                         forNumber.clear();
                         o = new Cord(0,0);
@@ -253,6 +251,40 @@ public class DuringGame extends View {
 
         }
         return true;
+    }
+
+    private void highestScore() {
+        if(gameType==0){
+            int easyhighest = sharedPreferences.getInt("easyhighest", 0);
+            if(safeTiles.size() > easyhighest){
+                easyhighest = safeTiles.size();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("easyhighest", easyhighest);
+                editor.commit();
+            }
+
+        }
+
+        else if(gameType==1){
+            int mediumhighest = sharedPreferences.getInt("mediumhighest", 0);
+            if(safeTiles.size() > mediumhighest){
+                mediumhighest = safeTiles.size();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("mediumhighest", mediumhighest);
+                editor.commit();
+            }
+
+        }
+        else {
+            int hardhighest = sharedPreferences.getInt("hardhighest", 0);
+            if(safeTiles.size() > hardhighest){
+                hardhighest = safeTiles.size();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("hardhighest", hardhighest);
+                editor.commit();
+            }
+        }
+
     }
 
     public boolean cordEqual(Cord a, Cord b) {
