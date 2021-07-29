@@ -19,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 public class highScoreDisplay extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     TextView highestEasyScore, highestMediumScore, highestHardScore;
-    int backPressNum;
 
 
     @Override
@@ -47,29 +46,6 @@ public class highScoreDisplay extends AppCompatActivity {
         Intent newGame = new Intent(highScoreDisplay.this, MainActivity.class);
         startActivity(newGame);
         finish();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @Override
-    public void onBackPressed() {
-        Toast backPressToast = Toast.makeText(getApplicationContext(), "Press back button again to exit", Toast.LENGTH_SHORT);
-        backPressNum++;
-        if (backPressNum==1) {
-            backPressToast.show();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    backPressToast.cancel();
-                    Intent intent = getIntent();
-                    finish();
-                    startActivity(intent);
-                }
-            }, 1000);
-        } else if(backPressNum==2){
-            backPressToast.cancel();
-            backPressNum = 0;
-            System.exit(0);
-        }
     }
 
     public void exit(View view) {

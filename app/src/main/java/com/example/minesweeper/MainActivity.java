@@ -26,12 +26,13 @@ public class MainActivity extends AppCompatActivity {
     int gameType;
     MediaPlayer GAMEMUSIC;
     int backPressNum;
-    Toast toastForBack;
+    Toast backPressToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        backPressToast = Toast.makeText(getApplicationContext(), "Press back button again to exit app", Toast.LENGTH_SHORT);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         audioImage = findViewById(R.id.audioImage);
@@ -104,15 +105,40 @@ public class MainActivity extends AppCompatActivity {
         startActivity(highScore);
     }
 
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onBackPressed() {
+        backPressNum++;
+        if (backPressNum==1) {
+            backPressToast.show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    backPressToast.cancel();
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+                }
+            }, 800);
+        } else if(backPressNum==2){
+            backPressToast.cancel();
+            backPressNum = 0;
+            System.exit(0);
+        }
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
+        if(backPressToast!=null){
+            backPressToast.cancel();
+        }
         if (GAMEMUSIC != null ) {
             GAMEMUSIC.release();
             GAMEMUSIC = MediaPlayer.create(this, R.raw.arcade_music_loop);
         }
     }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -125,27 +151,4 @@ public class MainActivity extends AppCompatActivity {
         finishAffinity();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @Override
-    public void onBackPressed() {
-        Toast backPressToast = Toast.makeText(getApplicationContext(), "Press back button again to exit", Toast.LENGTH_SHORT);
-        backPressNum++;
-        if (backPressNum==1) {
-            backPressToast.show();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    backPressToast.cancel();
-                    Intent intent = getIntent();
-                    finish();
-                    startActivity(intent);
-                }
-            }, 1000);
-        } else if(backPressNum==2){
-            backPressToast.cancel();
-            backPressNum = 0;
-            System.exit(0);
-        }
-    }
-
-    }
+}

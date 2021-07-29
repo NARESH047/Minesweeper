@@ -22,7 +22,7 @@ public class AfterGame extends AppCompatActivity {
     Boolean audioState;
     MediaPlayer END;
     int gameType, backPressNum;
-
+    Toast backPressToast;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +30,7 @@ public class AfterGame extends AppCompatActivity {
         sharedPreferences = this.getSharedPreferences("preferences", 0);
         audioState = sharedPreferences.getBoolean("audioState", true);
         gameType = sharedPreferences.getInt("gameType", 0);
+        backPressToast = Toast.makeText(getApplicationContext(), "Press back button again to exit app", Toast.LENGTH_SHORT);
         END = MediaPlayer.create(this, R.raw.game_end);
         if (audioState) {
             END.start();
@@ -56,7 +57,6 @@ public class AfterGame extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBackPressed() {
-        Toast backPressToast = Toast.makeText(getApplicationContext(), "Press back button again to exit", Toast.LENGTH_SHORT);
         backPressNum++;
         if (backPressNum==1) {
             backPressToast.show();
@@ -64,15 +64,23 @@ public class AfterGame extends AppCompatActivity {
                 @Override
                 public void run() {
                     backPressToast.cancel();
-                    Intent intent = getIntent();
+                    Intent newGame = new Intent(AfterGame.this, MainActivity.class);
+                    startActivity(newGame);
                     finish();
-                    startActivity(intent);
                 }
-            }, 1000);
+            }, 800);
         } else if(backPressNum==2){
             backPressToast.cancel();
-            backPressNum = 0;
+            finish();
             System.exit(0);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(backPressToast!=null){
+            backPressToast.cancel();
         }
     }
 
@@ -87,5 +95,4 @@ public class AfterGame extends AppCompatActivity {
         END.release();
         finish();
     }
-
 }
