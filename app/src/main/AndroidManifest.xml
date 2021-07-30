@@ -14,15 +14,18 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name="Game"
-            android:exported="true" />
+            android:exported="true"
+            android:noHistory="true"
+            />
         <activity android:name="AfterGame"
-            android:exported="true" />
-        <activity android:name=".highScoreDisplay"
-            android:exported="true" />
+            android:exported="true"
+            android:noHistory="true"/>
+        <activity android:name="highScoreDisplay"
+            android:exported="true"
+            android:noHistory="true"/>
     </application>
 </manifest>

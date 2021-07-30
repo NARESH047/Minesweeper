@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().setEnterTransition(null);
+        getWindow().setExitTransition(null);
         audioImage = findViewById(R.id.audioImage);
         sharedPreferences = getSharedPreferences("preferences",0);
         gameType = sharedPreferences.getInt("gameType", 0);

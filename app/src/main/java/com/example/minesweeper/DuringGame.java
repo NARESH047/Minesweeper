@@ -239,10 +239,10 @@ public class DuringGame extends View {
                                 editor.putInt("currentScore", score);
                                 editor.commit();
                                 highestScore();
-                                Intent intent = new Intent(Context, AfterGame.class);
-                                intent.putExtra("currentScore", score);
-                                 Context.startActivity(intent);
-                                ((Activity) Context).finish();
+                            Intent intent = new Intent(Context, AfterGame.class);
+                            intent.putExtra("currentScore", score);
+                            Context.startActivity(intent);
+                            ((Activity) Context).finish();
 
                         } else {
                             if (audioState) {
