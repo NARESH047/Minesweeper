@@ -33,6 +33,8 @@ public class DuringGame extends View {
     ArrayList<tileNum> forTileNumber = new ArrayList<tileNum>();
     boolean touchRespond = true;
 
+
+
     float xTouched, yTouched;
     Paint textPaint, numPaint, objPaint, borderPaint, tileRemainingPaint, gameTypePaint;
     Bitmap tileOrg, safeTileOrg, mineOrg, tile, safeTile, mine;
@@ -204,15 +206,12 @@ public class DuringGame extends View {
                                 touchRespond=false;
                                 if(SAFE!=null){
                                     SAFE.release();
-                                    SAFE=null;
                                 }
                                 if(WIN!=null){
                                     WIN.release();
-                                    WIN=null;
                                 }
                                 if(MINE!=null){
                                     MINE.release();
-                                    MINE=null;
                                 }
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putInt("currentScore", score);
