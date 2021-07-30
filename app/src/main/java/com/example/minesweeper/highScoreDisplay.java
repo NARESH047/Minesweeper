@@ -71,6 +71,7 @@ public class highScoreDisplay extends AppCompatActivity {
         if(audioState){
             VICTORY.release();
         }
+        finish();
         super.onBackPressed();
     }
 }

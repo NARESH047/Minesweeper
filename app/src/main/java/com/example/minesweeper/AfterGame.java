@@ -89,8 +89,9 @@ public class AfterGame extends AppCompatActivity {
         } else if(VICTORY!=null){
             VICTORY.release();
         }
+        Intent newGame = new Intent(AfterGame.this, MainActivity.class);
+        startActivity(newGame);
         finish();
-        super.onBackPressed();
     }
 
     public void restart(View view) {

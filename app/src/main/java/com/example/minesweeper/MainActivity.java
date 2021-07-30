@@ -81,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
         editor.commit();
         Intent startGame = new Intent(MainActivity.this, Game.class);
         startActivity(startGame);
+        finish();
+
     }
     public void mediumGame(View view) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -88,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
         editor.commit();
         Intent startGame = new Intent(MainActivity.this, Game.class);
         startActivity(startGame);
+        finish();
+
     }
     public void hardGame(View view) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -95,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
         editor.commit();
         Intent startGame = new Intent(MainActivity.this, Game.class);
         startActivity(startGame);
+        finish();
+
     }
     public void highestScore(View view) {
         Intent highScore = new Intent(MainActivity.this, highScoreDisplay.class);

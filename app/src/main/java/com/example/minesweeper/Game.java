@@ -49,6 +49,8 @@ public class Game extends AppCompatActivity {
             }, 1500);
         } else if(backPressNum==2){
             backPressToast.cancel();
+            Intent newGame = new Intent(Game.this, MainActivity.class);
+            startActivity(newGame);
             finish();
         }
     }
