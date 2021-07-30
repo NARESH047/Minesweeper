@@ -18,15 +18,25 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class highScoreDisplay extends AppCompatActivity {
     SharedPreferences sharedPreferences;
+    Boolean audioState;
+    MediaPlayer VICTORY;
     TextView highestEasyScore, highestMediumScore, highestHardScore;
 
-
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.high_score);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().setEnterTransition(null);
+        getWindow().setExitTransition(null);
         sharedPreferences = getSharedPreferences("preferences",0);
+        audioState = sharedPreferences.getBoolean("audioState", true);
+
+    if(audioState){
+        VICTORY = MediaPlayer.create(this, R.raw.victory);
+        VICTORY.start();
+    }
 
         highestEasyScore = findViewById(R.id.highest_score_easy);
         highestMediumScore = findViewById(R.id.highest_score_medium);
@@ -43,13 +53,24 @@ public class highScoreDisplay extends AppCompatActivity {
     }
 
     public void back(View view) {
-        Intent newGame = new Intent(highScoreDisplay.this, MainActivity.class);
-        startActivity(newGame);
+        if(audioState){
+            VICTORY.release();
+        }
         finish();
     }
 
     public void exit(View view) {
+        if(audioState){
+            VICTORY.release();
+        }
         finishAffinity();
     }
 
+    @Override
+    public void onBackPressed() {
+        if(audioState){
+            VICTORY.release();
+        }
+        super.onBackPressed();
+    }
 }

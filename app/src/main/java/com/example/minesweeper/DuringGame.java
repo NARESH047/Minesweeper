@@ -14,6 +14,7 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.AttributeSet;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -51,8 +52,8 @@ public class DuringGame extends View {
     Cord o = new Cord(0,0);
 
 
-    public DuringGame(Context context) {
-        super(context);
+    public DuringGame(Context context, AttributeSet attrs) {
+        super(context, attrs);
         Context = context;
         textPaint = new Paint();
         gameTypePaint = new Paint();
@@ -91,7 +92,7 @@ public class DuringGame extends View {
         gameTypePaint.setStrokeWidth(4);
 
         tileRemainingPaint.setColor(Color.parseColor("#0000FF"));
-        tileRemainingPaint.setTextSize(136f);
+        tileRemainingPaint.setTextSize(80f);
         tileRemainingPaint.setTextAlign(Paint.Align.CENTER);
         tileRemainingPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         tileRemainingPaint.setStyle(Paint.Style.STROKE);
@@ -172,7 +173,7 @@ public class DuringGame extends View {
 
         canvas.drawText("Game: "+game, dWidth/2, dHeight/8, gameTypePaint);
         canvas.drawText("Score: "+score, dWidth/2, dHeight/4, textPaint);
-        canvas.drawText(String.valueOf((numOfCord-mineNum-score)), dWidth/2, yCordNumRemainingTile, tileRemainingPaint);
+        canvas.drawText("Remaining tiles: " + (numOfCord-mineNum-score), dWidth/2, yCordNumRemainingTile, tileRemainingPaint);
 
         invalidate();
 
@@ -206,9 +207,6 @@ public class DuringGame extends View {
                             editor.putInt("currentScore", score);
                             editor.commit();
                             highestScore();
-                            for (Cord cordS:cordinates){
-                                if((!containedIn(cordS, randomForMineOrg)) && (!containedIn(cordS, safeTiles))){
-                                    safeTiles.add(cordS);}}
                             for (Cord cordM:randomForMineOrg){
                                 randomForMine.add(cordM);
                             }
@@ -242,7 +240,8 @@ public class DuringGame extends View {
                                 editor.commit();
                                 highestScore();
                                 Intent intent = new Intent(Context, AfterGame.class);
-                                Context.startActivity(intent);
+                                intent.putExtra("currentScore", score);
+                                 Context.startActivity(intent);
                                 ((Activity) Context).finish();
 
                         } else {

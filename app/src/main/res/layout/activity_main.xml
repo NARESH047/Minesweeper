@@ -157,7 +157,7 @@ android:background="@mipmap/app_background_stars">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" + On and off sound by pressing on the audio icon. \n + Double tap back button to exit and tap once to reach legend. \n + Enter the game by choosing difficulty level. \n + Select a tile by click. \n + Number at bottom of screen indicate number of remaining non mine tile. \n +Number on top of tile indicate number of surrounding mine. \n + Your score is diplayed on top of screen. \n + Press exit icon to exit. \n + Press restart icon to restart the game."
+            android:text=" + On and off sound by pressing on the audio icon. \n + During game double tap back button to exit. \n + Enter the game by choosing difficulty level. \n + Select a tile by click. \n + Number at bottom of screen indicate number of remaining non mine tile. \n +Number on top of tile indicate number of surrounding mine. \n + Your score is diplayed on top of screen. \n + Press exit icon to exit. \n + Press restart icon to restart the game."
             android:textSize="12dp"
             />
 
