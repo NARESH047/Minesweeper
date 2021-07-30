@@ -29,8 +29,6 @@ public class Game extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.during_game);
-        getWindow().setEnterTransition(null);
-        getWindow().setExitTransition(null);
         backPressToast = Toast.makeText(getApplicationContext(), "Press back button again to exit", Toast.LENGTH_SHORT);
     }
 

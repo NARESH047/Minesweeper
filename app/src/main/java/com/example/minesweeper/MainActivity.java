@@ -79,32 +79,30 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("gameType", 0);
         editor.commit();
-        Intent startGame = new Intent(MainActivity.this, Game.class);
-        startActivity(startGame);
-        finish();
+        intent();
 
     }
     public void mediumGame(View view) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("gameType", 1);
         editor.commit();
-        Intent startGame = new Intent(MainActivity.this, Game.class);
-        startActivity(startGame);
-        finish();
+        intent();
 
     }
     public void hardGame(View view) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("gameType", 2);
         editor.commit();
-        Intent startGame = new Intent(MainActivity.this, Game.class);
-        startActivity(startGame);
-        finish();
-
+        intent();
     }
     public void highestScore(View view) {
         Intent highScore = new Intent(MainActivity.this, highScoreDisplay.class);
         startActivity(highScore);
+    }
+    public void intent(){
+        Intent startGame = new Intent(MainActivity.this, Game.class);
+        startActivity(startGame);
+        finish();
     }
 
     @Override

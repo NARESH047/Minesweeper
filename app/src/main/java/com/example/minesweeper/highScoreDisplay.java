@@ -72,6 +72,5 @@ public class highScoreDisplay extends AppCompatActivity {
             VICTORY.release();
         }
         finish();
-        super.onBackPressed();
     }
 }

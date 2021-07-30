@@ -12,8 +12,6 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Build;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.util.AttributeSet;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -24,8 +22,6 @@ import androidx.annotation.RequiresApi;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static android.content.Context.VIBRATOR_SERVICE;
-
 public class DuringGame extends View {
     Context Context;
 
@@ -35,6 +31,7 @@ public class DuringGame extends View {
     ArrayList<Cord> randomForMine = new ArrayList<Cord>();
     ArrayList<Cord> forNumber = new ArrayList<Cord>();
     ArrayList<tileNum> forTileNumber = new ArrayList<tileNum>();
+    boolean touchRespond = true;
 
     float xTouched, yTouched;
     Paint textPaint, numPaint, objPaint, borderPaint, tileRemainingPaint, gameTypePaint;
@@ -191,91 +188,97 @@ public class DuringGame extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        xTouched = event.getX();
-        yTouched = event.getY();
-        if (yTouched >= 3*dHeight/8 && yTouched < (3*dHeight/8) + 8*tile.getWidth()) {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                p = (int) (((xTouched - 8) / tile.getWidth()) + 1);
-                q = (int) (((yTouched - (3*dHeight/8)) / tile.getHeight()) + 1);
-                w  =  ((8+(p-1)*tile.getWidth()));
-                s = 3*dHeight/8 + (q-1)*tile.getHeight();
-                o = new Cord(w, s);
-                for(Cord cordi:randomForMineOrg){
-                    {
-                        if(cordEqual(cordi, o)){
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putInt("currentScore", score);
-                            editor.commit();
-                            highestScore();
-                            for (Cord cordM:randomForMineOrg){
-                                randomForMine.add(cordM);
-                            }
-                            o = new Cord(0,0);
-                            Vibrator w = (Vibrator) Context.getSystemService(VIBRATOR_SERVICE);
-                            if (audioState) {
-                                MINE.start();
-                            }
-                            Intent intent = new Intent(Context, AfterGame.class);
-                            Context.startActivity(intent);
-                            ((Activity) Context).finish();
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                w.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE));
-                            } else {
-                                w.vibrate(1000);
-                            }
-
-                        }
-                    }
-                }
-                for (Cord cordi:cordinates){
-                    if(cordEqual(cordi, o) && (!containedIn(o, randomForMineOrg)) && (!containedIn(o, safeTiles))){
-                        score++;
-                        safeTiles.add(o);
-                        if(safeTiles.size() == 64-mineNum){
-                            setOnTouchListener(null);
-                            if (audioState) {
-                                WIN.start();}
+        if(touchRespond) {
+            xTouched = event.getX();
+            yTouched = event.getY();
+            if (yTouched >= 3 * dHeight / 8 && yTouched < (3 * dHeight / 8) + 8 * tile.getWidth()) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    p = (int) (((xTouched - 8) / tile.getWidth()) + 1);
+                    q = (int) (((yTouched - (3 * dHeight / 8)) / tile.getHeight()) + 1);
+                    w = ((8 + (p - 1) * tile.getWidth()));
+                    s = 3 * dHeight / 8 + (q - 1) * tile.getHeight();
+                    o = new Cord(w, s);
+                    for (Cord cordi : randomForMineOrg) {
+                        {
+                            if (cordEqual(cordi, o)) {
+                                touchRespond=false;
+                                if(SAFE!=null){
+                                    SAFE.release();
+                                    SAFE=null;
+                                }
+                                if(WIN!=null){
+                                    WIN.release();
+                                    WIN=null;
+                                }
+                                if(MINE!=null){
+                                    MINE.release();
+                                    MINE=null;
+                                }
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putInt("currentScore", score);
                                 editor.commit();
                                 highestScore();
-                            Intent intent = new Intent(Context, AfterGame.class);
-                            intent.putExtra("currentScore", score);
-                            Context.startActivity(intent);
-                            ((Activity) Context).finish();
+                                for (Cord cordM : randomForMineOrg) {
+                                    if (!(containedIn(cordM, randomForMine))) {
+                                        randomForMine.add(cordM);
+                                    }
+                                }
+                                o = new Cord(0, 0);
 
-                        } else {
-                            if (audioState) {
-                                if(safeTiles.size()%3 == 0 && safeTiles.size()!=0) {
-                                    WIN.start();
-                                }
+                                Intent intent = new Intent(Context, AfterGame.class);
+                                Context.startActivity(intent);
+                                ((Activity) Context).finish();
                             }
-                        for(int i=-1; i<2; i++) {
-                            forNumber.add(new Cord((o.getxCord() + i*tile.getWidth()), o.getyCord() - tile.getHeight()));
-                        }
-                        for(int i=-1; i<2; i++) {
-                            forNumber.add(new Cord((o.getxCord() + i*tile.getWidth()), o.getyCord() +tile.getHeight()));
-                        }
-                        forNumber.add(new Cord((o.getxCord() - tile.getWidth()), o.getyCord()));
-                        forNumber.add(new Cord((o.getxCord() + tile.getWidth()), o.getyCord()));
-                        for(Cord cordn:forNumber){
-                            for(Cord cordm:randomForMineOrg){
-                                if(cordEqual(cordn, cordm)){
-                                    n++;
-                                }
-                            }
-                        }
-                        forTileNumber.add(new tileNum(w+(tile.getWidth()),s+(tile.getHeight()), n));
-                        n=0;
-                        forNumber.clear();
-                        o = new Cord(0,0);
-                        if (audioState) {
-                            SAFE.start();
                         }
                     }
-                }}
-            }
+                    for (Cord cordi : cordinates) {
+                        if (cordEqual(cordi, o) && (!containedIn(o, randomForMineOrg)) && (!containedIn(o, safeTiles))) {
+                            score++;
+                            safeTiles.add(o);
+                            if (safeTiles.size() == 64 - mineNum) {
+                                touchRespond=false;
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putInt("currentScore", score);
+                                editor.commit();
+                                highestScore();
+                                Intent intent = new Intent(Context, AfterGame.class);
+                                Context.startActivity(intent);
+                                ((Activity) Context).finish();
 
+                            } else {
+                                if (audioState) {
+                                    if (safeTiles.size() % 3 == 0 && safeTiles.size() != 0) {
+                                        WIN.start();
+                                    }
+                                }
+                                for (int i = -1; i < 2; i++) {
+                                    forNumber.add(new Cord((o.getxCord() + i * tile.getWidth()), o.getyCord() - tile.getHeight()));
+                                }
+                                for (int i = -1; i < 2; i++) {
+                                    forNumber.add(new Cord((o.getxCord() + i * tile.getWidth()), o.getyCord() + tile.getHeight()));
+                                }
+                                forNumber.add(new Cord((o.getxCord() - tile.getWidth()), o.getyCord()));
+                                forNumber.add(new Cord((o.getxCord() + tile.getWidth()), o.getyCord()));
+                                for (Cord cordn : forNumber) {
+                                    for (Cord cordm : randomForMineOrg) {
+                                        if (cordEqual(cordn, cordm)) {
+                                            n++;
+                                        }
+                                    }
+                                }
+                                forTileNumber.add(new tileNum(w + (tile.getWidth()), s + (tile.getHeight()), n));
+                                n = 0;
+                                forNumber.clear();
+                                o = new Cord(0, 0);
+                                if (audioState) {
+                                    SAFE.start();
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
         }
         return true;
     }
